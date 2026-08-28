@@ -1,0 +1,1290 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>The Sibling Tax — A Raksha Bandhan Website</title>
+<meta name="description" content="A small, unnecessarily elaborate Raksha Bandhan website: four trials, and a note at the end." />
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Manrope:wght@400;500;600;700;800&family=Caveat:wght@500;600;700&display=swap" rel="stylesheet">
+
+<style>
+/* =========================================================
+   THE SIBLING TAX — a Raksha Bandhan website
+   Design concept: the page is threaded together like a rakhi —
+   a stitched line runs section to section, beaded at each
+   "trial," and ties into a bow at the very end that unlocks
+   the real note. Palette stays strictly white + blue on
+   purpose; the one indulgence is a handwritten accent face
+   used only for the signature and a couple of asides.
+   ========================================================= */
+
+/* ---------- Tokens ---------- */
+:root {
+  --paper: #fbfcfe;
+  --sky: #e6eefb;
+  --sky-deep: #cfe0f7;
+  --ink: #0e2a4a;
+  --steel: #62789a;
+  --thread: #2f5fe0;
+  --thread-deep: #1b3fa6;
+  --deep: #081833;
+
+  --font-display: "Fraunces", "Iowan Old Style", serif;
+  --font-body: "Manrope", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --font-hand: "Caveat", cursive;
+
+  --rail-x: 46px;
+  --radius-sm: 10px;
+  --radius-md: 18px;
+  --radius-lg: 30px;
+  --shadow-soft: 0 10px 30px rgba(14, 42, 74, 0.10);
+  --shadow-lift: 0 18px 44px rgba(27, 63, 166, 0.22);
+  --ease: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* ---------- Reset ---------- */
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body {
+  font-family: var(--font-body);
+  color: var(--ink);
+  background: var(--paper);
+  line-height: 1.65;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+img, svg { display: block; max-width: 100%; }
+button { font: inherit; }
+a { color: inherit; }
+ul { list-style: none; }
+
+h1, h2, h3, h4 {
+  font-family: var(--font-display);
+  color: var(--ink);
+  font-weight: 600;
+  line-height: 1.15;
+}
+
+.wrap {
+  max-width: 1080px;
+  margin: 0 auto;
+  padding: 0 6%;
+}
+
+.eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--thread-deep);
+}
+.eyebrow::before {
+  content: "";
+  width: 16px;
+  height: 1px;
+  background: var(--thread);
+}
+
+.hand {
+  font-family: var(--font-hand);
+  font-weight: 600;
+}
+
+:focus-visible {
+  outline: 2px solid var(--thread);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+/* ---------- Buttons ---------- */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  border: none;
+  cursor: pointer;
+  border-radius: 999px;
+  font-weight: 700;
+  font-size: 0.98rem;
+  padding: 14px 30px;
+  transition: transform 0.25s var(--ease), box-shadow 0.25s var(--ease), background 0.2s;
+}
+.btn-primary {
+  background: var(--thread);
+  color: #fff;
+  box-shadow: var(--shadow-soft);
+}
+.btn-primary:hover { transform: translateY(-3px); box-shadow: var(--shadow-lift); background: var(--thread-deep); }
+.btn-primary:active { transform: translateY(-1px); }
+.btn-primary:disabled { opacity: 0.5; cursor: default; transform: none; box-shadow: none; }
+
+.btn-ghost {
+  background: #fff;
+  color: var(--thread-deep);
+  border: 2px solid var(--sky-deep);
+}
+.btn-ghost:hover { border-color: var(--thread); color: var(--thread-deep); transform: translateY(-2px); }
+
+/* ---------- Navbar ---------- */
+.navbar {
+  position: fixed;
+  inset: 0 0 auto 0;
+  z-index: 200;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 6%;
+  background: rgba(251, 252, 254, 0.82);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border-bottom: 1px solid rgba(47, 95, 224, 0.08);
+}
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  font-family: var(--font-display);
+  font-weight: 600;
+  color: var(--ink);
+  font-size: 1.05rem;
+  text-decoration: none;
+}
+.logo-knot {
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+}
+.nav-links {
+  display: flex;
+  gap: 28px;
+}
+.nav-links a {
+  text-decoration: none;
+  font-weight: 700;
+  font-size: 0.9rem;
+  color: var(--steel);
+  position: relative;
+  padding: 4px 2px;
+  transition: color 0.2s;
+}
+.nav-links a::after {
+  content: "";
+  position: absolute;
+  left: 0; bottom: -4px;
+  width: 0; height: 2px;
+  background: var(--thread);
+  transition: width 0.3s var(--ease);
+}
+.nav-links a:hover, .nav-links a.is-active { color: var(--ink); }
+.nav-links a:hover::after, .nav-links a.is-active::after { width: 100%; }
+
+/* ---------- Thread rail (desktop only) ---------- */
+.thread-wrap { position: relative; }
+.thread-rail {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: var(--rail-x);
+  width: 2px;
+  background: repeating-linear-gradient(
+    to bottom,
+    var(--sky-deep) 0px, var(--sky-deep) 7px,
+    transparent 7px, transparent 15px
+  );
+  z-index: 1;
+  display: none;
+}
+.bead {
+  position: absolute;
+  left: var(--rail-x);
+  top: 46px;
+  width: 13px; height: 13px;
+  transform: translateX(-50%);
+  border-radius: 50%;
+  border: 2px solid var(--sky-deep);
+  background: var(--paper);
+  z-index: 2;
+  transition: background 0.4s var(--ease), border-color 0.4s var(--ease), box-shadow 0.4s var(--ease);
+}
+.bead.is-lit {
+  background: var(--thread);
+  border-color: var(--thread);
+  box-shadow: 0 0 0 5px rgba(47, 95, 224, 0.14);
+}
+@media (min-width: 900px) {
+  .thread-rail { display: block; }
+  .bead { display: block; }
+  section[data-trial] { padding-left: 96px; }
+}
+
+/* ---------- Hero ---------- */
+.hero {
+  position: relative;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 150px 6% 90px;
+  background: radial-gradient(120% 90% at 50% 0%, var(--sky) 0%, var(--paper) 60%);
+  overflow: hidden;
+}
+.hero-thread {
+  width: min(560px, 88vw);
+  margin: 0 auto 6px;
+  opacity: 0.9;
+}
+.hero-thread path {
+  fill: none;
+  stroke: var(--thread);
+  stroke-width: 2.4;
+  stroke-linecap: round;
+  stroke-dasharray: 900;
+  stroke-dashoffset: 900;
+  animation: draw 2.2s var(--ease) 0.2s forwards;
+}
+.hero-thread circle {
+  fill: var(--thread);
+  opacity: 0;
+  animation: dot-in 0.5s var(--ease) 2.1s forwards;
+}
+@keyframes draw { to { stroke-dashoffset: 0; } }
+@keyframes dot-in { to { opacity: 1; } }
+
+.hero .eyebrow { justify-content: center; margin-bottom: 22px; }
+.hero h1 {
+  font-size: clamp(2.1rem, 5vw, 3.6rem);
+  max-width: 780px;
+  margin: 0 auto 20px;
+  letter-spacing: -0.01em;
+}
+.hero h1 em {
+  font-style: italic;
+  color: var(--thread-deep);
+}
+.hero .subtitle {
+  max-width: 520px;
+  margin: 0 auto 34px;
+  color: var(--steel);
+  font-size: 1.08rem;
+}
+.hero-note {
+  position: absolute;
+  right: 6%;
+  top: 22%;
+  font-family: var(--font-hand);
+  font-size: 1.35rem;
+  color: var(--thread-deep);
+  transform: rotate(-6deg);
+  max-width: 190px;
+  text-align: left;
+  line-height: 1.25;
+}
+.hero-note svg { width: 46px; margin-top: 4px; }
+@media (max-width: 760px) { .hero-note { display: none; } }
+
+.scroll-cue {
+  margin-top: 46px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  color: var(--steel);
+  font-size: 0.82rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  animation: bob 2.2s ease-in-out infinite;
+}
+@keyframes bob { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(8px); } }
+
+/* ---------- Reveal on scroll ---------- */
+.reveal { opacity: 0; transform: translateY(26px); transition: opacity 0.7s var(--ease), transform 0.7s var(--ease); }
+.reveal.in-view { opacity: 1; transform: translateY(0); }
+
+/* ---------- Section shells ---------- */
+section[data-trial] { padding: 96px 6%; position: relative; }
+.section-head { max-width: 640px; margin-bottom: 44px; }
+.section-head h2 { font-size: clamp(1.7rem, 3.4vw, 2.4rem); margin: 12px 0 12px; }
+.section-head p { color: var(--steel); font-size: 1.02rem; }
+
+.bg-sky { background: var(--sky); }
+.bg-paper { background: var(--paper); }
+
+/* ---------- Preamble ---------- */
+.preamble { display: grid; grid-template-columns: 1fr; gap: 30px; align-items: center; }
+.preamble-body p { color: var(--ink); font-size: 1.08rem; max-width: 640px; }
+.preamble-body p + p { margin-top: 16px; }
+
+/* ---------- Trials / Games ---------- */
+.trial-nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 36px;
+}
+.trial-tab {
+  background: #fff;
+  border: 2px solid var(--sky-deep);
+  color: var(--thread-deep);
+  padding: 10px 18px;
+  border-radius: 999px;
+  font-weight: 700;
+  font-size: 0.88rem;
+  cursor: pointer;
+  transition: all 0.22s var(--ease);
+}
+.trial-tab:hover { border-color: var(--thread); }
+.trial-tab.is-active { background: var(--thread); border-color: var(--thread); color: #fff; }
+
+.trial-panel {
+  display: none;
+  background: #fff;
+  border-radius: var(--radius-lg);
+  padding: 40px clamp(20px, 4vw, 48px);
+  box-shadow: var(--shadow-soft);
+}
+.trial-panel.is-active { display: block; animation: fade-in 0.5s var(--ease); }
+@keyframes fade-in { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+.trial-clause {
+  font-size: 0.86rem;
+  color: var(--steel);
+  background: var(--sky);
+  border-left: 3px solid var(--thread);
+  padding: 10px 16px;
+  border-radius: 6px;
+  margin: 6px 0 26px;
+  max-width: 520px;
+}
+.trial-panel h3 { font-size: 1.5rem; margin-bottom: 6px; }
+.trial-status {
+  margin-top: 18px;
+  font-weight: 700;
+  color: var(--thread-deep);
+  min-height: 1.4em;
+}
+
+/* Trial I — Catch the Hug */
+.catch-arena {
+  position: relative;
+  height: 220px;
+  background: var(--sky);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+}
+#dodgeBtn {
+  position: absolute;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+/* Trial II — Whack-a-Bro */
+.whack-stats {
+  display: flex;
+  gap: 26px;
+  font-weight: 700;
+  color: var(--ink);
+  margin-bottom: 18px;
+}
+.whack-stats span span { color: var(--thread-deep); }
+.whack-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 14px;
+  max-width: 340px;
+  margin-bottom: 22px;
+}
+.whack-hole {
+  aspect-ratio: 1;
+  background: var(--sky);
+  border-radius: 50%;
+  overflow: hidden;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  cursor: pointer;
+  border: 2px solid var(--sky-deep);
+}
+.whack-mole {
+  font-size: 1.9rem;
+  transform: translateY(120%);
+  transition: transform 0.14s var(--ease);
+  user-select: none;
+}
+.whack-hole.is-active { background: var(--sky-deep); }
+.whack-hole.is-active .whack-mole { transform: translateY(10%); }
+
+/* Trial III — Quiz */
+.quiz-progress {
+  display: flex;
+  gap: 6px;
+  margin-bottom: 22px;
+}
+.quiz-progress span {
+  width: 26px; height: 5px;
+  border-radius: 3px;
+  background: var(--sky-deep);
+}
+.quiz-progress span.is-done { background: var(--thread); }
+.quiz-question { font-size: 1.2rem; margin-bottom: 18px; max-width: 520px; }
+.quiz-options { display: grid; gap: 10px; max-width: 460px; }
+.quiz-opt {
+  text-align: left;
+  background: var(--sky);
+  border: 2px solid transparent;
+  padding: 13px 18px;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  font-weight: 600;
+  color: var(--ink);
+  transition: all 0.2s var(--ease);
+}
+.quiz-opt:hover { border-color: var(--thread); }
+.quiz-opt.is-picked { background: var(--thread); color: #fff; }
+.quiz-feedback { margin-top: 16px; color: var(--thread-deep); font-weight: 700; min-height: 1.4em; }
+.quiz-result h3 { margin-bottom: 10px; }
+
+/* Trial IV — Memory Match */
+.memory-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 10px;
+  max-width: 380px;
+  margin-bottom: 18px;
+}
+.memory-card {
+  aspect-ratio: 1;
+  perspective: 600px;
+  cursor: pointer;
+}
+.memory-card-inner {
+  position: relative;
+  width: 100%; height: 100%;
+  transform-style: preserve-3d;
+  transition: transform 0.45s var(--ease);
+}
+.memory-card.is-flipped .memory-card-inner,
+.memory-card.is-matched .memory-card-inner { transform: rotateY(180deg); }
+.memory-face {
+  position: absolute; inset: 0;
+  border-radius: 10px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.5rem;
+  backface-visibility: hidden;
+}
+.memory-front { background: var(--thread); color: #fff; font-family: var(--font-display); }
+.memory-back { background: #fff; border: 2px solid var(--sky-deep); transform: rotateY(180deg); }
+.memory-card.is-matched .memory-back { border-color: var(--thread); background: var(--sky); }
+
+/* ---------- Final: the untying ---------- */
+.finale {
+  background: var(--deep);
+  color: #fff;
+  padding: 110px 6% 90px;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+.finale .eyebrow { justify-content: center; color: var(--sky-deep); }
+.finale .eyebrow::before { background: var(--sky-deep); }
+.finale h2 { color: #fff; font-size: clamp(1.8rem, 3.6vw, 2.6rem); margin: 12px 0 10px; }
+.finale > .wrap > p { color: #b9caea; max-width: 460px; margin: 0 auto 50px; }
+
+.bow-stage {
+  position: relative;
+  width: 220px;
+  margin: 0 auto 30px;
+}
+.bow-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+}
+.bow-btn svg { width: 150px; margin: 0 auto; transition: transform 0.5s var(--ease); }
+.bow-btn:hover svg { transform: scale(1.04); }
+.bow-hint {
+  margin-top: 14px;
+  font-size: 0.85rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  font-weight: 700;
+  color: var(--sky-deep);
+}
+.bow-stage.is-untied .bow-btn { pointer-events: none; }
+.ribbon-loop { transition: opacity 0.5s var(--ease), transform 0.6s var(--ease); transform-origin: center; }
+.bow-stage.is-untied .ribbon-loop-l { transform: translate(-40px, 10px) rotate(-25deg); opacity: 0; }
+.bow-stage.is-untied .ribbon-loop-r { transform: translate(40px, 10px) rotate(25deg); opacity: 0; }
+.bow-stage.is-untied .ribbon-knot { opacity: 0; }
+
+.envelope-zone { display: none; }
+.envelope-zone.is-shown { display: block; animation: fade-in 0.6s var(--ease); }
+
+.envelope {
+  position: relative;
+  width: min(320px, 84vw);
+  height: 200px;
+  margin: 0 auto;
+  cursor: pointer;
+}
+.envelope-body {
+  position: absolute; inset: 0;
+  background: linear-gradient(180deg, #f2f6fd, #fff);
+  border-radius: 10px;
+  box-shadow: var(--shadow-lift);
+  overflow: hidden;
+}
+.envelope-flap {
+  position: absolute;
+  top: 0; left: 0;
+  width: 0; height: 0;
+  border-left: 160px solid transparent;
+  border-right: 160px solid transparent;
+  border-top: 100px solid var(--thread);
+  transform-origin: top center;
+  transition: transform 0.7s var(--ease);
+  z-index: 3;
+}
+.envelope-shadow {
+  position: absolute; inset: 0;
+  background: linear-gradient(160deg, rgba(47,95,224,0.16), transparent 60%);
+  z-index: 2;
+  pointer-events: none;
+}
+.envelope-letter {
+  position: absolute;
+  left: 50%; bottom: 8px;
+  transform: translate(-50%, 14px);
+  width: 84%;
+  height: 0;
+  background: #fff;
+  border-radius: 8px;
+  opacity: 0;
+  z-index: 1;
+  transition: height 0.6s var(--ease) 0.15s, transform 0.6s var(--ease) 0.15s, opacity 0.5s ease 0.15s;
+}
+.envelope.is-open .envelope-flap { transform: rotateX(180deg); }
+.envelope.is-open .envelope-letter { height: 70%; transform: translate(-50%, -46%); opacity: 1; }
+.envelope-tap {
+  position: absolute;
+  bottom: -34px; left: 50%;
+  transform: translateX(-50%);
+  font-size: 0.82rem;
+  color: var(--sky-deep);
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+.envelope.is-open ~ .envelope-tap { opacity: 0; }
+
+.card-note {
+  display: none;
+  max-width: 560px;
+  margin: 56px auto 0;
+  background: #fff;
+  color: var(--ink);
+  border-radius: var(--radius-lg);
+  padding: clamp(28px, 5vw, 56px);
+  text-align: left;
+  box-shadow: var(--shadow-lift);
+  position: relative;
+}
+.card-note.is-shown { display: block; animation: card-in 0.7s var(--ease); }
+@keyframes card-in { from { opacity: 0; transform: translateY(24px) scale(0.98); } to { opacity: 1; transform: translateY(0) scale(1); } }
+.card-note p {
+  font-family: var(--font-display);
+  font-size: 1.12rem;
+  line-height: 1.7;
+  opacity: 0;
+  animation: line-in 0.6s var(--ease) forwards;
+}
+.card-note p:nth-of-type(1) { animation-delay: 0.15s; }
+.card-note p:nth-of-type(2) { animation-delay: 0.35s; }
+.card-note p:nth-of-type(3) { animation-delay: 0.55s; }
+.card-note p:nth-of-type(4) { animation-delay: 0.75s; }
+.card-note p + p { margin-top: 16px; }
+@keyframes line-in { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+.card-sign {
+  margin-top: 26px;
+  font-family: var(--font-hand);
+  font-size: 1.9rem;
+  color: var(--thread-deep);
+  opacity: 0;
+  animation: line-in 0.6s var(--ease) 1s forwards;
+}
+
+.particles-layer {
+  position: absolute; inset: 0;
+  pointer-events: none;
+  overflow: hidden;
+  z-index: 1;
+}
+.heart-particle {
+  position: absolute;
+  bottom: 10%;
+  font-size: 1.3rem;
+  animation: float-up 2.6s ease-out forwards;
+  opacity: 0.95;
+}
+@keyframes float-up {
+  to { transform: translateY(-220px) scale(1.3); opacity: 0; }
+}
+
+/* ---------- Footer ---------- */
+footer {
+  text-align: center;
+  padding: 30px 6%;
+  background: var(--deep);
+  color: #7f93b8;
+  font-size: 0.85rem;
+  border-top: 1px solid rgba(255,255,255,0.06);
+}
+
+/* ---------- Responsive ---------- */
+@media (max-width: 640px) {
+  .whack-grid, .memory-grid { max-width: 300px; }
+  .trial-panel { padding: 30px 20px; }
+}
+
+/* ---------- Reduced motion ---------- */
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  .hero-thread path, .hero-thread circle,
+  .scroll-cue, .card-note p, .card-sign,
+  .reveal, .trial-panel.is-active, .card-note.is-shown, .envelope-zone.is-shown {
+    animation: none !important;
+    transition: none !important;
+    opacity: 1 !important;
+    transform: none !important;
+    stroke-dashoffset: 0 !important;
+  }
+  .heart-particle { display: none; }
+}
+
+</style>
+</head>
+<body>
+
+<!-- ============ NAV ============ -->
+<nav class="navbar">
+  <a href="#hero" class="logo">
+    <svg class="logo-knot" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="10" cy="10" r="7" stroke="#2f5fe0" stroke-width="2"/>
+      <circle cx="10" cy="10" r="2" fill="#2f5fe0"/>
+    </svg>
+    The Sibling Tax
+  </a>
+  <ul class="nav-links">
+    <li><a href="#hero">Home</a></li>
+    <li><a href="#trials">The Trials</a></li>
+    <li><a href="#finale">For You</a></li>
+  </ul>
+</nav>
+
+<!-- ============ HERO ============ -->
+<header class="hero" id="hero">
+  <svg class="hero-thread" viewBox="0 0 560 160" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+    <path d="M20,90 C110,20 170,160 280,90 C390,20 450,160 540,90" />
+    <circle cx="280" cy="90" r="5"/>
+    <circle cx="20" cy="90" r="4"/>
+    <circle cx="540" cy="90" r="4"/>
+  </svg>
+
+  <p class="eyebrow">A Raksha Bandhan to my sister.</p>
+  <h1>Before this thread goes on your wrist, <span class="sister-name">Sis</span> —there’s one little matter we need to settle. <em>Some bonds are serendipitous. Ours is steadfast.</em></h1>
+  <p class="subtitle">Through every season, every triumph, every little chaos — you’ll always have me beside you. Consider this Rakhi a quiet promise of a bond that time, distance, and growing up can never quite undo.</p>
+  <a href="#trials" class="btn btn-primary">Read the Terms →</a>
+
+  <p class="hero-note">psst — there's a real note waiting at the very end, promise.</p>
+
+  <div class="scroll-cue" aria-hidden="true">
+    <span>Scroll</span>
+    <svg width="14" height="18" viewBox="0 0 14 18" fill="none"><path d="M7 0V17M7 17L1 11M7 17L13 11" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+  </div>
+</header>
+
+<div class="thread-wrap">
+  <div class="thread-rail" aria-hidden="true"></div>
+
+  <!-- ============ PREAMBLE ============ -->
+  <section id="preamble" class="bg-paper reveal" data-trial>
+    <div class="bead" aria-hidden="true"></div>
+    <div class="wrap preamble">
+      <div class="section-head">
+        <p class="eyebrow">The Preamble</p>
+        <h2>A word before we begin</h2>
+      </div>
+      <div class="preamble-body">
+        <p>Raksha Bandhan is supposed to be simple: a thread around your wrist, a promise between two people, and perhaps a little sibling chaos along the way. But some bonds deserve more than just a ritual.
+
+          So, before you proceed, there are four little trials waiting for you. Think of them as the terms and conditions of being my sister — a lifetime of teasing, unconditional support, shared secrets, ridiculous arguments, and memories I wouldn’t trade for anything.</p>
+        <p>Pass them, fail them, or simply enjoy the journey — there’s no real score to keep.
+
+          Because at the end of it all, there’s something waiting for you that matters far more than any gift:
+
+          a few words from my heart, meant only for you. 🤍 </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ TRIALS ============ -->
+  <section id="trials" class="bg-sky reveal" data-trial>
+    <div class="bead" aria-hidden="true"></div>
+    <div class="wrap">
+      <div class="section-head">
+        <p class="eyebrow">The Trials</p>
+        <h2>Complete your sibling tax</h2>
+        <p>Four trials. Zero real stakes. Full emotional damage.</p>
+      </div>
+
+      <div class="trial-nav" role="tablist">
+        <button class="trial-tab is-active" data-panel="panel-catch">I · The Runaway Hug</button>
+        <button class="trial-tab" data-panel="panel-whack">II · Whack-a-Bro</button>
+        <button class="trial-tab" data-panel="panel-quiz">III · The Sibling IQ Exam</button>
+        <button class="trial-tab" data-panel="panel-memory">IV · The Matching Thread</button>
+      </div>
+
+      <!-- Trial I -->
+      <div class="trial-panel is-active" id="panel-catch">
+        <h3>The Runaway Hug</h3>
+        <p class="trial-clause">Clause 4.2 — Affection must be earned. Catch the button before it decides you haven't suffered enough.</p>
+        <div class="catch-arena" id="catchArena">
+          <button class="btn btn-primary" id="dodgeBtn">Click for a hug!</button>
+        </div>
+        <p class="trial-status" id="catchStatus"></p>
+      </div>
+
+      <!-- Trial II -->
+      <div class="trial-panel" id="panel-whack">
+        <h3>Whack-a-Bro</h3>
+        <p class="trial-clause">Clause 7.1 — Minor acts of violence against your brother are pre-forgiven, provided a timer is involved.</p>
+        <div class="whack-stats">
+          <span>Score: <span id="whackScore">0</span></span>
+          <span>Time: <span id="whackTime">18</span>s</span>
+        </div>
+        <div class="whack-grid" id="whackGrid"></div>
+        <button class="btn btn-ghost" id="whackStart">Start trial</button>
+        <p class="trial-status" id="whackStatus"></p>
+      </div>
+
+      <!-- Trial III -->
+      <div class="trial-panel" id="panel-quiz">
+        <h3>The Sibling IQ Exam</h3>
+        <p class="trial-clause">Clause 2.9 — There are no wrong answers here. There are, however, judgmental ones.</p>
+        <div class="quiz-progress" id="quizProgress"></div>
+        <div id="quizBody">
+          <p class="quiz-question" id="quizQuestion"></p>
+          <div class="quiz-options" id="quizOptions"></div>
+          <p class="quiz-feedback" id="quizFeedback"></p>
+        </div>
+        <div class="quiz-result" id="quizResult">
+          <h3>Exam complete.</h3>
+          <p>Score doesn't matter — you already win at being the best sister around. 💙</p>
+          <button class="btn btn-ghost" id="quizRestart" style="margin-top:16px;">Retake exam</button>
+        </div>
+      </div>
+
+      <!-- Trial IV -->
+      <div class="trial-panel" id="panel-memory">
+        <h3>The Matching Thread</h3>
+        <p class="trial-clause">Clause 9.4 — Prove you remember things. Unlike, say, that one birthday.</p>
+        <p style="color:var(--steel); font-weight:700; margin-bottom:14px;">Moves: <span id="memoryMoves">0</span></p>
+        <div class="memory-grid" id="memoryGrid"></div>
+        <button class="btn btn-ghost" id="memoryReset">Shuffle again</button>
+        <p class="trial-status" id="memoryStatus"></p>
+      </div>
+    </div>
+  </section>
+</div>
+
+<!-- ============ FINALE ============ -->
+<section id="finale" class="finale">
+  <div class="wrap" style="position:relative; z-index:2;">
+    <p class="eyebrow">The Thread's End</p>
+    <h2>For you</h2>
+    <p>All trials logged. Tax officially paid. One small thing left to untie.</p>
+
+    <div class="bow-stage" id="bowStage">
+      <button class="bow-btn" id="bowBtn" aria-label="Untie the bow">
+        <svg viewBox="0 0 200 140" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <g class="ribbon-loop ribbon-loop-l">
+            <path d="M100,70 C60,18 8,30 14,70 C8,112 60,122 100,70 Z" stroke="#dce8fb" stroke-width="4"/>
+          </g>
+          <g class="ribbon-loop ribbon-loop-r">
+            <path d="M100,70 C140,18 192,30 186,70 C192,112 140,122 100,70 Z" stroke="#dce8fb" stroke-width="4"/>
+          </g>
+          <path d="M92,80 L80,124" stroke="#dce8fb" stroke-width="4" stroke-linecap="round"/>
+          <path d="M108,80 L120,124" stroke="#dce8fb" stroke-width="4" stroke-linecap="round"/>
+          <circle class="ribbon-knot" cx="100" cy="70" r="11" fill="#dce8fb"/>
+        </svg>
+      </button>
+      <p class="bow-hint">Tap the bow to untie it</p>
+    </div>
+
+    <div class="envelope-zone" id="envelopeZone">
+      <div class="particles-layer" id="finaleParticles"></div>
+      <div class="envelope" id="envelope">
+        <div class="envelope-shadow"></div>
+        <div class="envelope-letter"></div>
+        <div class="envelope-flap"></div>
+        <div class="envelope-body"></div>
+      </div>
+      <p class="envelope-tap">Tap the envelope to open it</p>
+
+      <div class="card-note" id="cardNote">
+        <!-- ✏️ EDIT YOUR MESSAGE — everything inside these <p> tags is yours to rewrite -->
+        <p>Dear <span class="sister-name">Sis</span>,</p>
+        <p>Some people become special quietly — through countless little moments, shared laughter, silly arguments, secrets, and memories that somehow become the most precious ones. You’ve become one of those people in my life, and I don’t say that nearly enough.
+
+           Thank you for being my constant, for understanding the things I don’t always say, for putting up with my chaos, and for making ordinary moments feel a little more cherishable.</p>
+        <p>This Rakhi is more than just a thread around your wrist. It is a small reminder of something much greater — that no matter how much life changes, you’ll always have a place in my heart and someone standing beside you.</p>
+        <p>May your life be filled with serendipity, quiet happiness, and everything beautiful you deserve. And whenever you need me, you already know — I’ve got you.</p>
+        <p class="card-sign">With all my love,<br><span class="your-name">Your Brother - Sarthak </span></p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  Made with 💙  — Happy Raksha Bandhan.
+</footer>
+
+<script>
+/* =========================================================
+   THE SIBLING TAX — script.js
+   ---------------------------------------------------------
+   ✏️ THE TWO LINES MOST WORTH EDITING ARE RIGHT HERE:
+   ========================================================= */
+const SISTER_NAME = "Sis";
+const YOUR_NAME = "Your Brother";
+/* Everything with class="sister-name" / "your-name" in the
+   HTML gets filled in from these automatically below. The
+   note itself lives in index.html inside the #cardNote block
+   — search for "EDIT YOUR MESSAGE" there. */
+
+document.addEventListener("DOMContentLoaded", () => {
+  document.querySelectorAll(".sister-name").forEach(el => (el.textContent = SISTER_NAME));
+  document.querySelectorAll(".your-name").forEach(el => (el.textContent = YOUR_NAME));
+
+  initNav();
+  initRevealOnScroll();
+  initBeadRail();
+  initTrialTabs();
+  initCatchTheHug();
+  initWhackABro();
+  initQuiz();
+  initMemoryMatch();
+  initFinale();
+});
+
+/* ---------------- Nav + active link ---------------- */
+function initNav() {
+  const links = document.querySelectorAll(".nav-links a");
+  const sections = [...document.querySelectorAll("section[id]")];
+  if (!("IntersectionObserver" in window) || sections.length === 0) return;
+
+  const obs = new IntersectionObserver(
+    entries => {
+      entries.forEach(entry => {
+        if (!entry.isIntersecting) return;
+        links.forEach(l => l.classList.remove("is-active"));
+        const match = document.querySelector(`.nav-links a[href="#${entry.target.id}"]`);
+        if (match) match.classList.add("is-active");
+      });
+    },
+    { rootMargin: "-45% 0px -50% 0px" }
+  );
+  sections.forEach(s => obs.observe(s));
+}
+
+/* ---------------- Reveal-on-scroll ---------------- */
+function initRevealOnScroll() {
+  const items = document.querySelectorAll(".reveal");
+  if (!("IntersectionObserver" in window)) {
+    items.forEach(el => el.classList.add("in-view"));
+    return;
+  }
+  const obs = new IntersectionObserver(
+    entries => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add("in-view");
+          obs.unobserve(entry.target);
+        }
+      });
+    },
+    { threshold: 0.15 }
+  );
+  items.forEach(el => obs.observe(el));
+}
+
+/* ---------------- Thread beads light up as you scroll ---------------- */
+function initBeadRail() {
+  const beads = document.querySelectorAll(".bead");
+  if (!beads.length || !("IntersectionObserver" in window)) return;
+  const obs = new IntersectionObserver(
+    entries => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) entry.target.classList.add("is-lit");
+      });
+    },
+    { threshold: 0.6 }
+  );
+  beads.forEach(b => obs.observe(b));
+}
+
+/* ---------------- Trial tabs (switch between the 4 games) ---------------- */
+function initTrialTabs() {
+  const tabs = document.querySelectorAll(".trial-tab");
+  const panels = document.querySelectorAll(".trial-panel");
+  tabs.forEach(tab => {
+    tab.addEventListener("click", () => {
+      tabs.forEach(t => t.classList.remove("is-active"));
+      panels.forEach(p => p.classList.remove("is-active"));
+      tab.classList.add("is-active");
+      const panel = document.getElementById(tab.dataset.panel);
+      if (panel) panel.classList.add("is-active");
+    });
+  });
+}
+
+/* ---------------- Trial I: Catch the Hug ---------------- */
+function initCatchTheHug() {
+  const arena = document.getElementById("catchArena");
+  const btn = document.getElementById("dodgeBtn");
+  const status = document.getElementById("catchStatus");
+  if (!arena || !btn) return;
+
+  let dodgesLeft = 5;
+  let caught = false;
+  const supportsHover = window.matchMedia("(hover: hover)").matches;
+
+  function moveButton() {
+    const arenaRect = arena.getBoundingClientRect();
+    const btnRect = btn.getBoundingClientRect();
+    const maxX = Math.max(arenaRect.width - btnRect.width - 16, 0);
+    const maxY = Math.max(arenaRect.height - btnRect.height - 16, 0);
+    const x = 8 + Math.random() * maxX;
+    const y = 8 + Math.random() * maxY;
+    btn.style.transform = "none";
+    btn.style.left = x + "px";
+    btn.style.top = y + "px";
+  }
+
+  function dodge() {
+    if (dodgesLeft <= 0 || caught) return;
+    moveButton();
+    dodgesLeft--;
+    status.textContent =
+      dodgesLeft > 0 ? `Dodges left: ${dodgesLeft}` : "Fine. Standing still. This one's real.";
+  }
+
+  if (supportsHover) btn.addEventListener("mouseenter", dodge);
+
+  btn.addEventListener("click", () => {
+    if (dodgesLeft > 0) { dodge(); return; }
+    caught = true;
+    btn.disabled = true;
+    btn.textContent = "Hug delivered 🤗";
+    status.textContent = "Trial complete. Redeemable for one (1) real hug.";
+    spawnParticles(arena, 10, ["💙", "🫂", "✨"]);
+  });
+
+  status.textContent = `Dodges left: ${dodgesLeft}`;
+}
+
+/* ---------------- Trial II: Whack-a-Bro ---------------- */
+function initWhackABro() {
+  const grid = document.getElementById("whackGrid");
+  const startBtn = document.getElementById("whackStart");
+  const scoreEl = document.getElementById("whackScore");
+  const timeEl = document.getElementById("whackTime");
+  const status = document.getElementById("whackStatus");
+  if (!grid || !startBtn) return;
+
+  const HOLE_COUNT = 9;
+  const ROUND_SECONDS = 18;
+  for (let i = 0; i < HOLE_COUNT; i++) {
+    const hole = document.createElement("div");
+    hole.className = "whack-hole";
+    hole.innerHTML = '<div class="whack-mole">😝</div>';
+    grid.appendChild(hole);
+  }
+  const holes = [...grid.querySelectorAll(".whack-hole")];
+
+  let score = 0;
+  let timeLeft = ROUND_SECONDS;
+  let moleTimer = null;
+  let clockTimer = null;
+  let running = false;
+
+  function popRandomMole() {
+    holes.forEach(h => h.classList.remove("is-active"));
+    const idx = Math.floor(Math.random() * holes.length);
+    holes[idx].classList.add("is-active");
+  }
+
+  function endRound() {
+    running = false;
+    clearInterval(moleTimer);
+    clearInterval(clockTimer);
+    holes.forEach(h => h.classList.remove("is-active"));
+    startBtn.disabled = false;
+    startBtn.textContent = "Play again";
+    status.textContent = `Trial complete — ${score} whack${score === 1 ? "" : "s"} logged. He probably deserved every one.`;
+  }
+
+  function startRound() {
+    if (running) return;
+    running = true;
+    score = 0;
+    timeLeft = ROUND_SECONDS;
+    scoreEl.textContent = score;
+    timeEl.textContent = timeLeft;
+    status.textContent = "";
+    startBtn.disabled = true;
+    startBtn.textContent = "Running…";
+    moleTimer = setInterval(popRandomMole, 700);
+    clockTimer = setInterval(() => {
+      timeLeft--;
+      timeEl.textContent = timeLeft;
+      if (timeLeft <= 0) endRound();
+    }, 1000);
+  }
+
+  holes.forEach(hole => {
+    hole.addEventListener("click", () => {
+      if (!running || !hole.classList.contains("is-active")) return;
+      score++;
+      scoreEl.textContent = score;
+      hole.classList.remove("is-active");
+    });
+  });
+
+  startBtn.addEventListener("click", startRound);
+}
+
+/* ---------------- Trial III: Sibling IQ Quiz ---------------- */
+const QUIZ_QUESTIONS = [
+  {
+    q: "Who finishes the snacks first, historically speaking?",
+    options: ["Me", "Also me", "Definitely me", "100% me"],
+    note: "Correct. There was no wrong answer here."
+  },
+  {
+    q: "What is the true purpose of a rakhi thread?",
+    options: ["Fashion", "Sibling tax collection", "Eternal bragging rights", "All of the above"],
+    note: "Legally, it's all of the above."
+  },
+  {
+    q: "On a scale of 'fine' to 'we are not okay', how was that one road trip?",
+    options: ["Fine", "Fine.", "FINE", "We don't talk about the road trip"],
+    note: "Noted for the record."
+  },
+  {
+    q: "Who is objectively the favorite child?",
+    options: ["You", "Also you", "Obviously you", "This is a trap question"],
+    note: "Wisest answer, honestly."
+  },
+  {
+    q: "Real talk — how does this website make you feel?",
+    options: ["Touched", "Suspicious", "Both, equally", "Ready for the actual gift"],
+    note: "Fair, on every count. Onward."
+  }
+];
+
+function initQuiz() {
+  const progressEl = document.getElementById("quizProgress");
+  const questionEl = document.getElementById("quizQuestion");
+  const optionsEl = document.getElementById("quizOptions");
+  const feedbackEl = document.getElementById("quizFeedback");
+  const resultEl = document.getElementById("quizResult");
+  const bodyEl = document.getElementById("quizBody");
+  const restartBtn = document.getElementById("quizRestart");
+  if (!questionEl) return;
+
+  let index = 0;
+
+  progressEl.innerHTML = QUIZ_QUESTIONS.map(() => "<span></span>").join("");
+  const dots = [...progressEl.children];
+
+  function renderQuestion() {
+    resultEl.classList.remove("is-shown");
+    bodyEl.style.display = "";
+    const item = QUIZ_QUESTIONS[index];
+    questionEl.textContent = `${index + 1}. ${item.q}`;
+    feedbackEl.textContent = "";
+    optionsEl.innerHTML = "";
+    dots.forEach((d, i) => d.classList.toggle("is-done", i < index));
+
+    item.options.forEach(opt => {
+      const b = document.createElement("button");
+      b.className = "quiz-opt";
+      b.type = "button";
+      b.textContent = opt;
+      b.addEventListener("click", () => {
+        [...optionsEl.children].forEach(c => c.classList.remove("is-picked"));
+        b.classList.add("is-picked");
+        feedbackEl.textContent = item.note;
+        setTimeout(() => {
+          index++;
+          if (index < QUIZ_QUESTIONS.length) renderQuestion();
+          else showResult();
+        }, 700);
+      });
+      optionsEl.appendChild(b);
+    });
+  }
+
+  function showResult() {
+    dots.forEach(d => d.classList.add("is-done"));
+    bodyEl.style.display = "none";
+    resultEl.classList.add("is-shown");
+  }
+
+  restartBtn.addEventListener("click", () => {
+    index = 0;
+    renderQuestion();
+  });
+
+  renderQuestion();
+}
+
+/* ---------------- Trial IV: Memory Match ---------------- */
+function initMemoryMatch() {
+  const grid = document.getElementById("memoryGrid");
+  const movesEl = document.getElementById("memoryMoves");
+  const statusEl = document.getElementById("memoryStatus");
+  const resetBtn = document.getElementById("memoryReset");
+  if (!grid) return;
+
+  const ICONS = ["🧵", "🎁", "💙", "👫", "🍬", "🪁", "🌸", "⭐"];
+
+  function shuffled() {
+    const deck = [...ICONS, ...ICONS];
+    for (let i = deck.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [deck[i], deck[j]] = [deck[j], deck[i]];
+    }
+    return deck;
+  }
+
+  let flipped = [];
+  let matched = 0;
+  let moves = 0;
+  let lock = false;
+
+  function build() {
+    grid.innerHTML = "";
+    flipped = [];
+    matched = 0;
+    moves = 0;
+    lock = false;
+    movesEl.textContent = moves;
+    statusEl.textContent = "";
+
+    shuffled().forEach(icon => {
+      const card = document.createElement("div");
+      card.className = "memory-card";
+      card.dataset.icon = icon;
+      card.innerHTML = `
+        <div class="memory-card-inner">
+          <div class="memory-face memory-front">?</div>
+          <div class="memory-face memory-back">${icon}</div>
+        </div>`;
+      card.addEventListener("click", () => flipCard(card));
+      grid.appendChild(card);
+    });
+  }
+
+  function flipCard(card) {
+    if (lock) return;
+    if (card.classList.contains("is-flipped") || card.classList.contains("is-matched")) return;
+    if (flipped.length === 2) return;
+
+    card.classList.add("is-flipped");
+    flipped.push(card);
+
+    if (flipped.length === 2) {
+      moves++;
+      movesEl.textContent = moves;
+      const [a, b] = flipped;
+      if (a.dataset.icon === b.dataset.icon) {
+        a.classList.add("is-matched");
+        b.classList.add("is-matched");
+        flipped = [];
+        matched++;
+        if (matched === ICONS.length) {
+          statusEl.textContent = `Trial complete — all pairs matched in ${moves} moves. Your memory is undefeated.`;
+        }
+      } else {
+        lock = true;
+        setTimeout(() => {
+          a.classList.remove("is-flipped");
+          b.classList.remove("is-flipped");
+          flipped = [];
+          lock = false;
+        }, 750);
+      }
+    }
+  }
+
+  resetBtn.addEventListener("click", build);
+  build();
+}
+
+/* ---------------- Finale: untie the bow → open envelope → reveal card ---------------- */
+function initFinale() {
+  const bowStage = document.getElementById("bowStage");
+  const bowBtn = document.getElementById("bowBtn");
+  const envelopeZone = document.getElementById("envelopeZone");
+  const envelope = document.getElementById("envelope");
+  const cardNote = document.getElementById("cardNote");
+  const particlesLayer = document.getElementById("finaleParticles");
+  if (!bowBtn) return;
+
+  bowBtn.addEventListener("click", () => {
+    if (bowStage.classList.contains("is-untied")) return;
+    bowStage.classList.add("is-untied");
+    setTimeout(() => {
+      envelopeZone.classList.add("is-shown");
+      envelopeZone.scrollIntoView({ behavior: "smooth", block: "center" });
+    }, 500);
+  });
+
+  envelope.addEventListener("click", () => {
+    if (envelope.classList.contains("is-open")) return;
+    envelope.classList.add("is-open");
+    spawnParticles(particlesLayer, 14, ["💙", "✨", "🤍"]);
+    setTimeout(() => {
+      cardNote.classList.add("is-shown");
+      cardNote.scrollIntoView({ behavior: "smooth", block: "center" });
+    }, 500);
+  });
+}
+
+/* ---------------- Shared: floating particle burst ---------------- */
+function spawnParticles(container, count, glyphs) {
+  if (!container) return;
+  for (let i = 0; i < count; i++) {
+    const el = document.createElement("span");
+    el.className = "heart-particle";
+    el.textContent = glyphs[Math.floor(Math.random() * glyphs.length)];
+    el.style.left = Math.random() * 90 + "%";
+    el.style.animationDelay = Math.random() * 0.4 + "s";
+    container.appendChild(el);
+    setTimeout(() => el.remove(), 3200);
+  }
+}
+
+</script>
+</body>
+</html>
